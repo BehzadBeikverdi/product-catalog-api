@@ -8,7 +8,7 @@ public interface IProductService
 {
     Task<BaseResponse<List<ProductResponseModel>>> GetAllAsync();
 
-    Task<BaseResponse<Product>> GetByIdAsync(Guid id);
+    Task<BaseResponse<ProductResponseModel>> GetByIdAsync(Guid id);
 
     Task<BaseResponse<ProductResponseModel>> CreateAsync(
         ProductRequestModel request);

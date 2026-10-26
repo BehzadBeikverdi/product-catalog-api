@@ -31,20 +31,31 @@ public class ProductService(
             productResponses);
     }
 
-    public async Task<BaseResponse<Product>> GetByIdAsync(Guid id)
+    public async Task<BaseResponse<ProductResponseModel>> GetByIdAsync(Guid id)
     {
         var product = await repository.GetByIdAsync(id);
 
         if (product is null)
         {
-            return BaseResponse<Product>.ErrorResponse(
+            return BaseResponse<ProductResponseModel>.ErrorResponse(
                 "Product not found",
                 new object[] { $"Product with ID '{id}' was not found." });
         }
+        
+        var response = new ProductResponseModel
+        {
+            Id = product.Id,
+            Name = product.Name,
+            Description = product.Description,
+            Price = product.Price,
+            Stock = product.StockQuantity,
+            CreatedAtUtc = product.CreatedAtUtc,
+            UpdatedAtUtc = product.UpdatedAtUtc
+        };
 
-        return BaseResponse<Product>.SuccessResponse(
+        return BaseResponse<ProductResponseModel>.SuccessResponse(
             "Product retrieved successfully",
-            product);
+            response);
     }
 
     public async Task<BaseResponse<ProductResponseModel>> CreateAsync(

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ProductCatalog.Models;
 using ProductCatalog.Models.Requests;
+using ProductCatalog.Models.Responses;
 using ProductCatalog.Services;
 
 namespace ProductCatalog.Controllers;
@@ -12,48 +13,56 @@ public class ProductsController(IProductService productService)
 {
     // GET: api/products
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<BaseResponse<List<ProductResponseModel>>> GetAll()
     {
         var products = await productService.GetAllAsync();
-        return Ok(products);
+
+        return products;
+        
+        // return Ok(products);
     }
 
     // GET: api/products/{id}
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetById(Guid id)
+    public async Task<BaseResponse<ProductResponseModel>> GetById(Guid id)
     {
         var product = await productService.GetByIdAsync(id);
-        return Ok(product);
+
+        return product;
+        
+        // return Ok(product);
     }
 
     // POST: api/products
     [HttpPost]
-    public async Task<IActionResult> Create(
+    public async Task<BaseResponse<ProductResponseModel>> Create(
         [FromBody] ProductRequestModel product)
     {
         var createdProduct = await productService.CreateAsync(product);
 
-        return CreatedAtAction(
-            nameof(GetById),
-            new { id = createdProduct.Payload.Id },
-            createdProduct);
+        return createdProduct;
+        
+        // return CreatedAtAction(
+        //     nameof(GetById),
+        //     new { id = createdProduct.Payload.Id },
+        //     createdProduct);
     }
 
     // PUT: api/products/{id}
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Update(
+    public async Task<BaseResponse<Object>> Update(
         Guid id,
         [FromBody] Product product)
     {
-        await productService.UpdateAsync(id, product);
-        return NoContent();
+        return await productService.UpdateAsync(id, product);
+        // return NoContent();
     }
 
     // DELETE: api/products/{id}
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<BaseResponse<Object>> Delete(Guid id)
     {
-        await productService.DeleteAsync(id);
-        return NoContent();
+        return await productService.DeleteAsync(id);
+        // return NoContent();
     }
 }
